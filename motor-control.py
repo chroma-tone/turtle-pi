@@ -2,11 +2,11 @@
 import RPi.GPIO as GPIO
 from time import sleep, time
 import readchar
-import os
+import os, sys
 from apscheduler.schedulers.background import BackgroundScheduler
 from enum import Enum
 import logging
-from threading import Thread
+from threading import Thread, Lock
 logging.basicConfig()
 
 class direction(Enum):
@@ -74,9 +74,12 @@ def goForward(state):
     GPIO.output(MotorBIN1,GPIO.HIGH)
     GPIO.output(MotorBIN2,GPIO.LOW)
 
-def checkDelta(lastTime, sleeptime, state):
-    #print "job : " + str(lastTime) + " " + str(sleeptime) + " " + str(state)
+def checkDelta(sleeptime, state, tlock):
+    global lastTime
+#    tlock.acquire()
     delta = time() - lastTime
+ #   tlock.release()
+    print("job: {} > {} ?\n".format(delta, sleeptime))
     if delta > sleeptime:
         stop(state)
 
@@ -88,8 +91,9 @@ MotorBEN = 23
 MotorBIN1 = 24
 MotorBIN2 = 25
 
-def mainloop(state, lastTime, scheduler):
+def mainloop(state, scheduler, tlock):
     command = ""
+    global lastTime
     try: 
         while command != "x":
             command = readchar.readchar()
@@ -98,7 +102,9 @@ def mainloop(state, lastTime, scheduler):
                 command = readchar.readchar()
         
             if command == 'A':
+              #  tlock.acquire()
                 lastTime = time()
+               # tlock.release()
                 goForward(state)
             elif command == "B":
                 lastTime = time()
@@ -117,7 +123,6 @@ def mainloop(state, lastTime, scheduler):
     cleanUp(state, scheduler)
 
 def main():
-    lastTime = time()
     state = direction.none
 
     GPIO.setmode(GPIO.BCM)
@@ -131,11 +136,11 @@ def main():
     
     stop(state)
     sleeptime = 0.3
-    
+    tlock = Lock()
     scheduler = BackgroundScheduler()
     scheduler.start()
-    scheduler.add_job(checkDelta, 'interval', seconds=0.05, args=[lastTime, sleeptime, state])
-    keyboardThread = Thread(target = mainloop, args = [state, lastTime, scheduler])
+    scheduler.add_job(checkDelta, 'interval', seconds=0.25, args=[ sleeptime, state, tlock])
+    keyboardThread = Thread(target = mainloop, args = [state,  scheduler, tlock])
     keyboardThread.start()
     try:
         while 1:
@@ -148,5 +153,6 @@ def cleanUp(state, scheduler):
     GPIO.cleanup()
     scheduler.shutdown()
 
+lastTime = time()
 if __name__ == "__main__":
     main()
