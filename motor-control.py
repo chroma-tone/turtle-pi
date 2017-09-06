@@ -32,33 +32,33 @@ def goBack(state):
         GPIO.output(MotorBEN,GPIO.LOW)
         state = direction.back
     
-    GPIO.output(MotorAIN1,GPIO.LOW)
-    GPIO.output(MotorAIN2,GPIO.HIGH)
-    GPIO.output(MotorAEN,GPIO.HIGH)
+        GPIO.output(MotorAIN1,GPIO.LOW)
+        GPIO.output(MotorAIN2,GPIO.HIGH)
+        GPIO.output(MotorAEN,GPIO.HIGH)
 
-    GPIO.output(MotorBIN1,GPIO.LOW)
-    GPIO.output(MotorBIN2,GPIO.HIGH)
-    GPIO.output(MotorBEN,GPIO.HIGH)
-
-def goRight(state):
-    if state != direction.right:
-        GPIO.output(MotorAEN,GPIO.LOW)
-        GPIO.output(MotorBEN,GPIO.LOW)
-        state = direction.right
-    
-    GPIO.output(MotorAIN1,GPIO.LOW)
-    GPIO.output(MotorAIN2,GPIO.HIGH)
-    GPIO.output(MotorAEN,GPIO.HIGH)
+        GPIO.output(MotorBIN1,GPIO.LOW)
+        GPIO.output(MotorBIN2,GPIO.HIGH)
+        GPIO.output(MotorBEN,GPIO.HIGH)
 
 def goLeft(state):
     if state != direction.left:
         GPIO.output(MotorAEN,GPIO.LOW)
         GPIO.output(MotorBEN,GPIO.LOW)
         state = direction.left
+    
+        GPIO.output(MotorAIN1,GPIO.HIGH)
+        GPIO.output(MotorAIN2,GPIO.LOW)
+        GPIO.output(MotorAEN,GPIO.HIGH)
 
-    GPIO.output(MotorBIN1,GPIO.LOW)
-    GPIO.output(MotorBIN2,GPIO.HIGH)
-    GPIO.output(MotorBEN,GPIO.HIGH)
+def goRight(state):
+    if state != direction.right:
+        GPIO.output(MotorAEN,GPIO.LOW)
+        GPIO.output(MotorBEN,GPIO.LOW)
+        state = direction.right
+
+        GPIO.output(MotorBIN1,GPIO.HIGH)
+        GPIO.output(MotorBIN2,GPIO.LOW)
+        GPIO.output(MotorBEN,GPIO.HIGH)
 
 def goForward(state):
     if state != direction.forward:
@@ -66,20 +66,20 @@ def goForward(state):
         GPIO.output(MotorBEN,GPIO.LOW)
         state = direction.forward
 
-    GPIO.output(MotorAEN,GPIO.HIGH)
-    GPIO.output(MotorAIN1,GPIO.HIGH)
-    GPIO.output(MotorAIN2,GPIO.LOW)
+        GPIO.output(MotorAEN,GPIO.HIGH)
+        GPIO.output(MotorAIN1,GPIO.HIGH)
+        GPIO.output(MotorAIN2,GPIO.LOW)
 
-    GPIO.output(MotorBEN,GPIO.HIGH)
-    GPIO.output(MotorBIN1,GPIO.HIGH)
-    GPIO.output(MotorBIN2,GPIO.LOW)
+        GPIO.output(MotorBEN,GPIO.HIGH)
+        GPIO.output(MotorBIN1,GPIO.HIGH)
+        GPIO.output(MotorBIN2,GPIO.LOW)
 
 def checkDelta(sleeptime, state, tlock):
     global lastTime
 #    tlock.acquire()
     delta = time() - lastTime
  #   tlock.release()
-    print("job: {} > {} ?\n".format(delta, sleeptime))
+    #print("job: {} > {} ?\n".format(delta, sleeptime))
     if delta > sleeptime:
         stop(state)
 
@@ -135,11 +135,11 @@ def main():
     GPIO.setup(MotorBIN2,GPIO.OUT)
     
     stop(state)
-    sleeptime = 0.3
+    sleeptime = 0.2
     tlock = Lock()
     scheduler = BackgroundScheduler()
     scheduler.start()
-    scheduler.add_job(checkDelta, 'interval', seconds=0.25, args=[ sleeptime, state, tlock])
+    scheduler.add_job(checkDelta, 'interval', seconds=0.05, args=[ sleeptime, state, tlock])
     keyboardThread = Thread(target = mainloop, args = [state,  scheduler, tlock])
     keyboardThread.start()
     try:
