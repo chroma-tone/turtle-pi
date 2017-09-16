@@ -7,7 +7,17 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from enum import Enum
 import logging
 from threading import Thread, Lock
-logging.basicConfig()
+import argparse
+parser = argparse.ArgumentParser(description='motor controller for the turtle pi')
+parser.add_argument("--log",dest='log_level')
+args = parser.parse_args()
+log_level = args.log_level
+if log_level != None:
+    numeric_level = getattr(logging, log_level.upper(), None)
+    if not isinstance(numeric_level, int):
+        raise ValueError('Invalid log level: %s' % log_level)
+
+    logging.basicConfig(filename='log', level=numeric_level)
 
 class direction(Enum):
     forward = 1
@@ -74,13 +84,13 @@ def goForward(state):
         GPIO.output(MotorBIN1,GPIO.HIGH)
         GPIO.output(MotorBIN2,GPIO.LOW)
 
-def checkDelta(sleeptime, state, tlock):
-    global lastTime
-#    tlock.acquire()
-    delta = time() - lastTime
- #   tlock.release()
-    #print("job: {} > {} ?\n".format(delta, sleeptime))
-    if delta > sleeptime:
+def checkDelta(sleep_time, state, tlock):
+    global last_time
+    tlock.acquire()
+    delta = time() - last_time
+    tlock.release()
+    logging.debug("job: {} > {} ?".format(delta, sleep_time))
+    if delta > sleep_time:
         stop(state)
 
 
@@ -93,34 +103,40 @@ MotorBIN2 = 25
 
 def mainloop(state, scheduler, tlock):
     command = ""
-    global lastTime
+    global last_time
     try: 
         while command != "x":
+            sleep(0.05)
             command = readchar.readchar()
             if command == '\033':
                 readchar.readchar()
                 command = readchar.readchar()
         
             if command == 'A':
-              #  tlock.acquire()
-                lastTime = time()
-               # tlock.release()
+                updateLastUpdatedTime(tlock)
                 goForward(state)
             elif command == "B":
-                lastTime = time()
+                updateLastUpdatedTime(tlock)
                 goBack(state)
             elif command == "C":
-                lastTime = time()
+                updateLastUpdatedTime(tlock)
                 goRight(state)
             elif command == "D":
-                lastTime = time()
+                updateLastUpdatedTime(tlock)
                 goLeft(state)
             elif command == "s":
                 stop(state)
     except (KeyboardInterrupt, SystemExit):
-        print "system exception"    
+        print "exit keyboard thread"    
     print "ctrl-c to exit"
     cleanUp(state, scheduler)
+
+def updateLastUpdatedTime(tlock):
+    global last_time
+    tlock.acquire()
+    logging.debug("updating lastTime")
+    last_time = time()
+    tlock.release()
 
 def main():
     state = direction.none
@@ -135,24 +151,26 @@ def main():
     GPIO.setup(MotorBIN2,GPIO.OUT)
     
     stop(state)
-    sleeptime = 0.2
+    sleep_time = 0.2
     tlock = Lock()
     scheduler = BackgroundScheduler()
     scheduler.start()
-    scheduler.add_job(checkDelta, 'interval', seconds=0.05, args=[ sleeptime, state, tlock])
-    keyboardThread = Thread(target = mainloop, args = [state,  scheduler, tlock])
-    keyboardThread.start()
+    scheduler.add_job(checkDelta, 'interval', seconds=0.05, args=[ sleep_time, state, tlock])
+    keyboard_thread = Thread(target = mainloop, args = [state,  scheduler, tlock])
+    keyboard_thread.start()
     try:
         while 1:
             sleep(1)
     except (KeyboardInterrupt, SystemExit):
-        print "system exception"    
+        print "exit main"
+        keyboard_thread.join()
+
 
 def cleanUp(state, scheduler):        
     stop(state)
     GPIO.cleanup()
     scheduler.shutdown()
 
-lastTime = time()
+last_time = time()
 if __name__ == "__main__":
     main()
