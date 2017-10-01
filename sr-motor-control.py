@@ -24,16 +24,16 @@ class ShiftRegisterMotorControl:
 
     # RPI pins: Ref https://www.element14.com/community/servlet/JiveServlet/previewBody/73950-102-11-339300/pi3_gpio.png
     # Interface to 74HCT595 latch
-    MOTORLATCH = 5
-    MOTORCLK = 6
-    MOTORENABLE = 13
-    MOTORDATA = 19
+    MOTORLATCH = 5 # Arduino D12
+    MOTORCLK = 6 # Arduino D4
+    MOTORENABLE = 13 # Arduino D7
+    MOTORDATA = 19 # Arduino D8
 
     # PWM motor speed control
-    MOTOR1_EN = 12
-    MOTOR2_EN = 16
-    MOTOR3_EN = 20
-    MOTOR4_EN = 21
+    MOTOR1_EN = 12 # Arduino D11
+    MOTOR2_EN = 16 # Arduino D3
+    MOTOR3_EN = 20 # Arduino D5
+    MOTOR4_EN = 21 # Arduino D6
 
     # PWM control frequency (Hz)
     PWM_FREQ = 100
