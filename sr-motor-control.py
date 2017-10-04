@@ -1,10 +1,10 @@
-import Rpi.GPIO as GPIO
-import Rpi.GPIO.LOW as LOW
-import Rpi.GPIO.HIGH as HIGH
+import RPi.GPIO as GPIO
+from time import sleep
 
 class ShiftRegisterMotorControl:
     # Static state of latch across all ShiftRegisterMotorControl instances
     latchState = 0
+    gpiosInitialized = False
 
     # Bit positions in the 74HCT595 shift register output
     MOTOR1_A = 2
@@ -24,10 +24,17 @@ class ShiftRegisterMotorControl:
 
     # RPI pins: Ref https://www.element14.com/community/servlet/JiveServlet/previewBody/73950-102-11-339300/pi3_gpio.png
     # Interface to 74HCT595 latch
-    MOTORLATCH = 5 # Arduino D12
-    MOTORCLK = 6 # Arduino D4
-    MOTORENABLE = 13 # Arduino D7
-    MOTORDATA = 19 # Arduino D8
+
+# Purpose  74HC595  Arduino  Rpi     Color
+# !Latch   12       D12      GPIO19  White
+# !CLK     11       D4       GPIO13  Grey
+# !EN      13       D7       GPIO6   Purple
+# DATA     14       D8       GPIO5   Blue
+
+    MOTORLATCH = 19 
+    MOTORCLK = 13 
+    MOTORENABLE = 6 
+    MOTORDATA = 5 
 
     # PWM motor speed control
     MOTOR1_EN = 12 # Arduino D11
@@ -38,64 +45,122 @@ class ShiftRegisterMotorControl:
     # PWM control frequency (Hz)
     PWM_FREQ = 100
 
+    @staticmethod
+    def initializeGpios():
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setup(ShiftRegisterMotorControl.MOTORLATCH, GPIO.OUT)
+        GPIO.setup(ShiftRegisterMotorControl.MOTORCLK, GPIO.OUT)
+        GPIO.setup(ShiftRegisterMotorControl.MOTORENABLE, GPIO.OUT)
+        GPIO.setup(ShiftRegisterMotorControl.MOTORDATA, GPIO.OUT)
+        GPIO.setup(ShiftRegisterMotorControl.MOTOR1_EN, GPIO.OUT)
+        GPIO.setup(ShiftRegisterMotorControl.MOTOR2_EN, GPIO.OUT)
+        GPIO.setup(ShiftRegisterMotorControl.MOTOR3_EN, GPIO.OUT)
+        GPIO.setup(ShiftRegisterMotorControl.MOTOR4_EN, GPIO.OUT)
+
+        GPIO.output(ShiftRegisterMotorControl.MOTORENABLE, GPIO.LOW)
+        ShiftRegisterMotorControl.gpiosInitialized = True
+
     def __init__(this, motorNumber):
-        if motorNumber > 4 || motorNumber < 1:
+        if motorNumber > 4 or motorNumber < 1:
             raise ValueError, "motorNumber must be between 1 and 4 inclusive"
 
+        if ~ShiftRegisterMotorControl.gpiosInitialized:
+            ShiftRegisterMotorControl.initializeGpios()
+
         if motorNumber == 1:
-            this.motorA = MOTOR1_A
-            this.motorB = MOTOR1_B
-            this.motorPwm = GPIO.PWM(MOTOR1_EN, PWM_FREQ)
+            this.motorA = ShiftRegisterMotorControl.MOTOR1_A
+            this.motorB = ShiftRegisterMotorControl.MOTOR1_B
+            this.motorPwm = GPIO.PWM(ShiftRegisterMotorControl.MOTOR1_EN, ShiftRegisterMotorControl.PWM_FREQ)
 
         elif motorNumber == 2:
-            this.motorA = MOTOR2_A
-            this.motorB = MOTOR2_B
-            this.motorPwm = MOTOR2_EN
-            this.motorPwm = GPIO.PWM(MOTOR2_EN, PWM_FREQ)
+            this.motorA = ShiftRegisterMotorControl.MOTOR2_A
+            this.motorB = ShiftRegisterMotorControl.MOTOR2_B
+            this.motorPwm = GPIO.PWM(ShiftRegisterMotorControl.MOTOR2_EN, ShiftRegisterMotorControl.PWM_FREQ)
 
         elif motorNumber == 3:
-            this.motorA = MOTOR3_A
-            this.motorB = MOTOR3_B
-            this.motorPwm = MOTOR3_EN
-            this.motorPwm = GPIO.PWM(MOTOR3_EN, PWM_FREQ)
+            this.motorA = ShiftRegisterMotorControl.MOTOR3_A
+            this.motorB = ShiftRegisterMotorControl.MOTOR3_B
+            this.motorPwm = GPIO.PWM(ShiftRegisterMotorControl.MOTOR3_EN, ShiftRegisterMotorControl.PWM_FREQ)
 
         elif motorNumber == 4:
-            this.motorA = MOTOR4_A
-            this.motorB = MOTOR4_B
-            this.motorPwm = GPIO.PWM(MOTOR4_EN, PWM_FREQ)
+            this.motorA = ShiftRegisterMotorControl.MOTOR4_A
+            this.motorB = ShiftRegisterMotorControl.MOTOR4_B
+            this.motorPwm = GPIO.PWM(ShiftRegisterMotorControl.MOTOR4_EN, ShiftRegisterMotorControl.PWM_FREQ)
 
         # Initialize motor driver to idle state
         this.motorPwm.start(0)
-        this.setDirection(RELEASE)
-        latch_tx()
+        this.setDirection(ShiftRegisterMotorControl.RELEASE)
 
+    @staticmethod
     def latch_tx():
-        GPIO.output(MOTORLATCH, LOW)
-        GPIO.output(MOTORDATA, GPIO.LOW)
+        GPIO.output(ShiftRegisterMotorControl.MOTORLATCH, GPIO.HIGH)
 
-        for i in range(0,7):
-            GPIO.output(MOTORCLK, LOW)
-            if (latchState >> i) & 0x01 == 0x01:
-                GPIO.output(MOTORDATA, HIGH)
+        print "ShiftRegisterMotorControl.latchState = " + str(ShiftRegisterMotorControl.latchState)
+        for i in range(0,8):
+            
+            # Set up data pin with next bit
+            if (ShiftRegisterMotorControl.latchState << i) & 0x80 == 0x80:
+                print "Latching 1"
+                GPIO.output(ShiftRegisterMotorControl.MOTORDATA, GPIO.HIGH)
             else:
-                GPIO.output(MOTORDATA, LOW)
-            GPIO.output(MOTORCLK, HIGH)
+                print "Latching 0"
+                GPIO.output(ShiftRegisterMotorControl.MOTORDATA, GPIO.LOW)
 
-        GPIO.output(MOTORLATCH, HIGH)
+            # And pulse clock to serialize through
+            GPIO.output(ShiftRegisterMotorControl.MOTORCLK, GPIO.LOW)
+            sleep(0.001)
+            GPIO.output(ShiftRegisterMotorControl.MOTORCLK, GPIO.HIGH)
+            sleep(0.001)
 
-    def setDirection(direction):
-        if direction == FORWARD:
-            this.latchState |= 1 << this.motorA
-            this.latchState &= !(1 << this.motorB)
-        if direction == BACKWARD:
-            this.latchState &= !(1 << this.motorA)
-            this.latchState |= 1 << this.motorB
-        if direction == RELEASE:
-            this.latchState &= !(1 << this.motorA)
-            this.latchState &= !(1 << this.motorB)
+        GPIO.output(ShiftRegisterMotorControl.MOTORLATCH, GPIO.LOW)
 
-        latch_tx()
+    def setDirection(this, direction):
+        if direction == ShiftRegisterMotorControl.FORWARD:
+            ShiftRegisterMotorControl.latchState |= 1 << this.motorA
+            ShiftRegisterMotorControl.latchState &= ~(1 << this.motorB)
 
-    def setSpeed(percentSpeed):
+        if direction == ShiftRegisterMotorControl.BACKWARD:
+            ShiftRegisterMotorControl.latchState &= ~(1 << this.motorA)
+            ShiftRegisterMotorControl.latchState |= 1 << this.motorB
+
+        if direction == ShiftRegisterMotorControl.RELEASE:
+            ShiftRegisterMotorControl.latchState &= ~(1 << this.motorA)
+            ShiftRegisterMotorControl.latchState &= ~(1 << this.motorB)
+
+        ShiftRegisterMotorControl.latch_tx()
+
+    def setSpeed(this, percentSpeed):
+        print "Changing duty cycle to " + str(percentSpeed)
         this.motorPwm.ChangeDutyCycle(percentSpeed)
 
+def test1():
+    motor1 = ShiftRegisterMotorControl(1)
+    motor1.setSpeed(100)
+
+    for i in range(1,10):
+        print "Forward"
+        motor1.setDirection(ShiftRegisterMotorControl.FORWARD)
+        sleep(10)
+
+        print "Backwards"
+        motor1.setDirection(ShiftRegisterMotorControl.BACKWARD)
+        sleep(10)
+
+        print "Release"
+        motor1.setDirection(ShiftRegisterMotorControl.RELEASE)
+        sleep(10)
+
+    motor1.setSpeed(0)
+
+try:
+    ShiftRegisterMotorControl.initializeGpios()
+    while True:
+        for i in range(0,8):
+            ShiftRegisterMotorControl.latchState = 1 << i
+            ShiftRegisterMotorControl.latch_tx()
+            sleep(1)
+except:
+    pass
+
+# test1()
+GPIO.cleanup()
