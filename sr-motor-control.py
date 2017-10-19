@@ -93,11 +93,15 @@ class ShiftRegisterMotorControl:
 
     @staticmethod
     def latch_tx():
-        GPIO.output(ShiftRegisterMotorControl.MOTORLATCH, GPIO.HIGH)
+        GPIO.output(ShiftRegisterMotorControl.MOTORLATCH, GPIO.LOW)
 
         print "ShiftRegisterMotorControl.latchState = " + str(ShiftRegisterMotorControl.latchState)
         for i in range(0,8):
             
+            # Set clock low, ready to load up data
+            GPIO.output(ShiftRegisterMotorControl.MOTORCLK, GPIO.LOW)
+            sleep(0.001)
+
             # Set up data pin with next bit
             if (ShiftRegisterMotorControl.latchState << i) & 0x80 == 0x80:
                 print "Latching 1"
@@ -107,12 +111,10 @@ class ShiftRegisterMotorControl:
                 GPIO.output(ShiftRegisterMotorControl.MOTORDATA, GPIO.LOW)
 
             # And pulse clock to serialize through
-            GPIO.output(ShiftRegisterMotorControl.MOTORCLK, GPIO.LOW)
-            sleep(0.001)
             GPIO.output(ShiftRegisterMotorControl.MOTORCLK, GPIO.HIGH)
             sleep(0.001)
 
-        GPIO.output(ShiftRegisterMotorControl.MOTORLATCH, GPIO.LOW)
+        GPIO.output(ShiftRegisterMotorControl.MOTORLATCH, GPIO.HIGH)
 
     def setDirection(this, direction):
         if direction == ShiftRegisterMotorControl.FORWARD:
