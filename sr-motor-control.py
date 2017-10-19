@@ -142,27 +142,29 @@ def test1():
     for i in range(1,10):
         print "Forward"
         motor1.setDirection(ShiftRegisterMotorControl.FORWARD)
-        sleep(10)
+        sleep(1)
 
         print "Backwards"
         motor1.setDirection(ShiftRegisterMotorControl.BACKWARD)
-        sleep(10)
+        sleep(1)
 
         print "Release"
         motor1.setDirection(ShiftRegisterMotorControl.RELEASE)
-        sleep(10)
+        sleep(1)
 
     motor1.setSpeed(0)
 
-try:
-    ShiftRegisterMotorControl.initializeGpios()
-    while True:
-        for i in range(0,8):
-            ShiftRegisterMotorControl.latchState = 1 << i
-            ShiftRegisterMotorControl.latch_tx()
-            sleep(1)
-except:
-    pass
+def shift_test():
+    try:
+        ShiftRegisterMotorControl.initializeGpios()
+        while True:
+            for i in range(0,8):
+                ShiftRegisterMotorControl.latchState = 1 << i
+                ShiftRegisterMotorControl.latch_tx()
+                sleep(1)
+    except:
+        pass
 
-# test1()
+test1()
+# shift_test()
 GPIO.cleanup()
