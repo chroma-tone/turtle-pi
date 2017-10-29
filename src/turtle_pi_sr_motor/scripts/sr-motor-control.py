@@ -173,7 +173,7 @@ def shift_test():
 # test1()
 # shift_test()
 
-def callback(data):
+def rightWheelCallback(data):
     rospy.loginfo(rospy.get_caller_id() + "Setting Direction %s", data.data)
 
     if data.data == "Forward":
@@ -186,8 +186,8 @@ def callback(data):
         rospy.loginfo(rospy.get_caller_id() + " Unknown command %s", data.data)
 
 def listener():
-    rospy.init_node('listener', anonymous=True)
-    rospy.Subscriber("chatter", String, callback)
+    rospy.init_node('turtle_pi', anonymous=True)
+    rospy.Subscriber("right_wheel", String, rightWheelCallback)
     rospy.spin()
 
 if __name__ == '__main__':
