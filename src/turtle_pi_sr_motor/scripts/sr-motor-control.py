@@ -1,5 +1,10 @@
+#!/usr/bin/env python
+
 import RPi.GPIO as GPIO
 from time import sleep
+
+import rospy
+from std_msgs.msg import String
 
 class ShiftRegisterMotorControl:
     # Static state of latch across all ShiftRegisterMotorControl instances
@@ -165,6 +170,32 @@ def shift_test():
     except:
         pass
 
-test1()
+# test1()
 # shift_test()
+
+def callback(data):
+    rospy.loginfo(rospy.get_caller_id() + "Setting Direction %s", data.data)
+
+    if data.data == "Forward":
+        motor1.setDirection(ShiftRegisterMotorControl.FORWARD)
+    elif data.data == "Backward":
+        motor1.setDirection(ShiftRegisterMotorControl.BACKWARD)
+    elif data.data == "Release":
+        motor1.setDirection(ShiftRegisterMotorControl.RELEASE)
+    else:
+        rospy.loginfo(rospy.get_caller_id() + " Unknown command %s", data.data)
+
+def listener():
+    rospy.init_node('listener', anonymous=True)
+    rospy.Subscriber("chatter", String, callback)
+    rospy.spin()
+
+if __name__ == '__main__':
+    motor1 = ShiftRegisterMotorControl(1)
+    motor1.setSpeed(100)
+
+    listener()
+    motor1.setSpeed(0)
+
 GPIO.cleanup()
+
