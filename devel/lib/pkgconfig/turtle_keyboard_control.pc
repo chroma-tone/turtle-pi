@@ -1,8 +1,0 @@
-prefix=/home/turtlebot/git/turtle-pi/devel
-
-Name: turtle_keyboard_control
-Description: Description of turtle_keyboard_control
-Version: 0.0.0
-Cflags: 
-Libs: -L/home/turtlebot/git/turtle-pi/devel/lib 
-Requires: 
