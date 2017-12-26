@@ -1,0 +1,8 @@
+prefix=/home/turtlebot/git/turtle-pi/devel
+
+Name: turtle-pi-sr-motor
+Description: Description of turtle-pi-sr-motor
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/turtlebot/git/turtle-pi/devel/lib 
+Requires: 
