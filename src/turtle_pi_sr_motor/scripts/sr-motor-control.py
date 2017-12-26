@@ -1,5 +1,10 @@
+#!/usr/bin/env python
+
 import RPi.GPIO as GPIO
 from time import sleep
+
+import rospy
+from std_msgs.msg import String
 
 class ShiftRegisterMotorControl:
     # Static state of latch across all ShiftRegisterMotorControl instances
@@ -95,7 +100,7 @@ class ShiftRegisterMotorControl:
     def latch_tx():
         GPIO.output(ShiftRegisterMotorControl.MOTORLATCH, GPIO.LOW)
 
-        print "ShiftRegisterMotorControl.latchState = " + str(ShiftRegisterMotorControl.latchState)
+        # print "ShiftRegisterMotorControl.latchState = " + str(ShiftRegisterMotorControl.latchState)
         for i in range(0,8):
             
             # Set clock low, ready to load up data
@@ -104,10 +109,10 @@ class ShiftRegisterMotorControl:
 
             # Set up data pin with next bit
             if (ShiftRegisterMotorControl.latchState << i) & 0x80 == 0x80:
-                print "Latching 1"
+                # print "Latching 1"
                 GPIO.output(ShiftRegisterMotorControl.MOTORDATA, GPIO.HIGH)
             else:
-                print "Latching 0"
+                # print "Latching 0"
                 GPIO.output(ShiftRegisterMotorControl.MOTORDATA, GPIO.LOW)
 
             # And pulse clock to serialize through
@@ -165,6 +170,49 @@ def shift_test():
     except:
         pass
 
-test1()
+# test1()
 # shift_test()
+
+def rightWheelCallback(data):
+    rospy.loginfo(rospy.get_caller_id() + "Setting Direction %s", data.data)
+
+    if data.data == "Forward":
+        motorR.setDirection(ShiftRegisterMotorControl.FORWARD)
+    elif data.data == "Backward":
+        motorR.setDirection(ShiftRegisterMotorControl.BACKWARD)
+    elif data.data == "Release":
+        motorR.setDirection(ShiftRegisterMotorControl.RELEASE)
+    else:
+        rospy.loginfo(rospy.get_caller_id() + " Unknown command %s", data.data)
+
+def leftWheelCallback(data):
+    rospy.loginfo(rospy.get_caller_id() + "Setting Direction %s", data.data)
+
+    if data.data == "Forward":
+        motorL.setDirection(ShiftRegisterMotorControl.FORWARD)
+    elif data.data == "Backward":
+        motorL.setDirection(ShiftRegisterMotorControl.BACKWARD)
+    elif data.data == "Release":
+        motorL.setDirection(ShiftRegisterMotorControl.RELEASE)
+    else:
+        rospy.loginfo(rospy.get_caller_id() + " Unknown command %s", data.data)
+
+def listener():
+    rospy.init_node('turtle_pi', anonymous=True)
+    rospy.Subscriber("right_wheel", String, rightWheelCallback)
+    rospy.Subscriber("left_wheel", String, leftWheelCallback)
+    rospy.spin()
+
+if __name__ == '__main__':
+    motorL = ShiftRegisterMotorControl(1)
+    motorL.setSpeed(100)
+
+    motorR = ShiftRegisterMotorControl(2)
+    motorR.setSpeed(100)
+
+    listener()
+    motorL.setSpeed(0)
+    motorR.setSpeed(0)
+
 GPIO.cleanup()
+

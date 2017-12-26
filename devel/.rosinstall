@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/turtlebot/git/turtle-pi/devel/setup.sh
