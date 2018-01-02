@@ -28,7 +28,7 @@ def set_twist():
     twist.angular.z = rotation
 
     turtle_control.publish(twist)
-    return "Twist value {0:d}, {1:d}".format(twist.linear.x, twist.angular.z)
+    return "Current Twist: {0:d}, {1:d}".format(twist.linear.x, twist.angular.z)
 
 def initRospy():
     global turtle_control
