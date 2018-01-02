@@ -21,12 +21,12 @@ def control_update(data):
     if data.angular.z > 0:
         rospy.loginfo("Turning Right")
         left_wheel.publish(1)
-        right_wheel.publish(-1)
+        right_wheel.publish(0)
         active = True
 
     elif data.angular.z < 0:
         rospy.loginfo("Turning Left")
-        left_wheel.publish(-1)
+        left_wheel.publish(0)
         right_wheel.publish(1)
         active = True
 

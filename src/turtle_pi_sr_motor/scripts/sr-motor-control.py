@@ -219,10 +219,10 @@ def listener():
     rospy.spin()
 
 if __name__ == '__main__':
-    motorL = ShiftRegisterMotorControl(1)
+    motorL = ShiftRegisterMotorControl(2)
     motorL.setSpeed(80)
 
-    motorR = ShiftRegisterMotorControl(2)
+    motorR = ShiftRegisterMotorControl(1)
     motorR.setSpeed(80)
 
     listener()
