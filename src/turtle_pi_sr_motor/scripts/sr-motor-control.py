@@ -2,6 +2,7 @@
 
 import RPi.GPIO as GPIO
 from time import sleep
+from time import time
 
 import rospy
 from std_msgs.msg import Int16
@@ -49,7 +50,7 @@ class ShiftRegisterMotorControl:
     MOTOR4_EN = 21 # Arduino D6
 
     # PWM control frequency (Hz)
-    PWM_FREQ = 100
+    PWM_FREQ = 500
 
     @staticmethod
     def initializeGpios():
@@ -100,15 +101,14 @@ class ShiftRegisterMotorControl:
 
     @staticmethod
     def latch_tx():
+        latch_start = time()
         GPIO.output(ShiftRegisterMotorControl.MOTORLATCH, GPIO.LOW)
+
+        # Set Clock Low initially
+        GPIO.output(ShiftRegisterMotorControl.MOTORCLK, GPIO.LOW)
 
         # print "ShiftRegisterMotorControl.latchState = " + str(ShiftRegisterMotorControl.latchState)
         for i in range(0,8):
-            
-            # Set clock low, ready to load up data
-            GPIO.output(ShiftRegisterMotorControl.MOTORCLK, GPIO.LOW)
-            sleep(0.001)
-
             # Set up data pin with next bit
             if (ShiftRegisterMotorControl.latchState << i) & 0x80 == 0x80:
                 # print "Latching 1"
@@ -117,11 +117,17 @@ class ShiftRegisterMotorControl:
                 # print "Latching 0"
                 GPIO.output(ShiftRegisterMotorControl.MOTORDATA, GPIO.LOW)
 
+            sleep(0.001)
+
             # And pulse clock to serialize through
             GPIO.output(ShiftRegisterMotorControl.MOTORCLK, GPIO.HIGH)
             sleep(0.001)
+            GPIO.output(ShiftRegisterMotorControl.MOTORCLK, GPIO.LOW)
 
         GPIO.output(ShiftRegisterMotorControl.MOTORLATCH, GPIO.HIGH)
+        latch_end = time()
+        latch_delta = latch_end - latch_start
+        rospy.loginfo ("Latch delta {0:2}".format(latch_delta))
 
     def setDirection(this, direction):
         # Check if we're already going this way - no need to re-latch
@@ -181,7 +187,7 @@ def shift_test():
 # shift_test()
 
 def rightWheelCallback(data):
-    rospy.loginfo(rospy.get_caller_id() + "Setting Direction %s", data.data)
+    rospy.loginfo(rospy.get_caller_id() + " - Setting Right Wheel Direction %s", data.data)
 
     # TODO: Check if we're already going in the right direction - no need to reload if so
 
@@ -195,7 +201,7 @@ def rightWheelCallback(data):
         rospy.loginfo(rospy.get_caller_id() + " Unknown command %s", data.data)
 
 def leftWheelCallback(data):
-    rospy.loginfo(rospy.get_caller_id() + "Setting Direction %s", data.data)
+    rospy.loginfo(rospy.get_caller_id() + " - Setting Left Wheel Direction %s", data.data)
 
     if data.data == 1:
         motorL.setDirection(ShiftRegisterMotorControl.FORWARD)
@@ -213,11 +219,11 @@ def listener():
     rospy.spin()
 
 if __name__ == '__main__':
-    motorL = ShiftRegisterMotorControl(1)
-    motorL.setSpeed(100)
+    motorL = ShiftRegisterMotorControl(2)
+    motorL.setSpeed(80)
 
-    motorR = ShiftRegisterMotorControl(2)
-    motorR.setSpeed(100)
+    motorR = ShiftRegisterMotorControl(1)
+    motorR.setSpeed(80)
 
     listener()
     motorL.setSpeed(0)

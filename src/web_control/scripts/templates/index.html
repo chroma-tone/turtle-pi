@@ -1,0 +1,44 @@
+<!doctype html>
+
+<head>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='turtle-pi.css')}}">
+    <script type="text/javascript" src="{{ url_for('static', filename='jquery-2.2.3.js')}}"></script>
+    <script>
+
+function set_twist(speed, rotation) {
+    $.get("/twist?speed=" + speed + "&rotation=" + rotation, function(data) {
+        $('#current_twist').html(data);
+    });
+}
+
+function stop() {
+    set_twist(0,0);
+}
+    </script>
+
+</head>
+<body>
+    <title>Turtle-Pi Web Control</title>
+
+    <table style="width:300px" border="0">
+        <tr><td colspan="3"><center><h1>Turtle-Pi Web Control</h1></center></td></tr>
+        <tr>
+            <td><button class="button button_size" onmousedown="set_twist('1', '-1')" ontouchstart="set_twist('1', '-1')" onmouseup="stop()" ontouchend="stop()">Forward Left</button></td>
+            <td><button class="button button_size" onmousedown="set_twist('1', '0')"  ontouchstart="set_twist('1', '0')"  onmouseup="stop()" ontouchend="stop()">Forward</button></td>
+            <td><button class="button button_size" onmousedown="set_twist('1', '1')"  ontouchstart="set_twist('1', '1')"  onmouseup="stop()" ontouchend="stop()">Forward Right</button></td>
+        </tr>
+        <tr>
+            <td><button class="button button_size" onmousedown="set_twist('0', '-1')" ontouchstart="set_twist('0', '-1')" onmouseup="stop()" ontouchend="stop()">Turn Left</button></td>
+            <td><button class="button button_size" onmousedown="set_twist('0', '0')"  ontouchstart="set_twist('0', '0')"  onmouseup="stop()" ontouchend="stop()">Idle</button></td>
+            <td><button class="button button_size" onmousedown="set_twist('0', '1')"  ontouchstart="set_twist('0', '1')"  onmouseup="stop()" ontouchend="stop()">Turn Right</button></td>
+        </tr>
+        <tr>
+            <td><button class="button button_size" onmousedown="set_twist('-1', '-1')" ontouchstart="set_twist('-1', '-1')" onmouseup="stop()" ontouchend="stop()">Back Left</button></td>
+            <td><button class="button button_size" onmousedown="set_twist('-1', '0')"  ontouchstart="set_twist('-1', '0')"  onmouseup="stop()" ontouchend="stop()">Backward</button></td>
+            <td><button class="button button_size" onmousedown="set_twist('-1', '1')"  ontouchstart="set_twist('-1', '1')"  onmouseup="stop()" ontouchend="stop()">Back Right</button></td>
+        </tr>
+    </table>
+    <p>
+    <div id="current_twist">Current Twist: 0,0</div>
+</body>
+

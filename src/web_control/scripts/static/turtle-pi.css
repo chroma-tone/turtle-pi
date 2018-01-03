@@ -1,0 +1,57 @@
+body {
+  font: 10px sans-serif;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 1.5px;
+}
+
+.slider-width {
+  width: 300px;
+}
+
+table {
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+th {
+    background-color: #4CAF50;
+    color: white;
+    text-align: left;
+}
+
+.button {
+  background: #ffff00;
+  background-image: -webkit-linear-gradient(top, #ffff00, #eda81f);
+  background-image: -moz-linear-gradient(top, #ffff00, #eda81f);
+  background-image: -ms-linear-gradient(top, #ffff00, #eda81f);
+  background-image: -o-linear-gradient(top, #ffff00, #eda81f);
+  background-image: linear-gradient(to bottom, #ffff00, #eda81f);
+  -webkit-border-radius: 14;
+  -moz-border-radius: 14;
+  border-radius: 14px;
+  -webkit-box-shadow: 1px 1px 3px #666666;
+  -moz-box-shadow: 1px 1px 3px #666666;
+  box-shadow: 1px 1px 3px #666666;
+  font-family: Arial;
+  color: #0088ff;
+  font-size: 15px;
+  padding: 20px 10px 20px 10px;
+  border: solid #1f628d 2px;
+  text-decoration: none;
+}
+
+.button_size {
+    width: 100px;
+    height: 75px;
+}
