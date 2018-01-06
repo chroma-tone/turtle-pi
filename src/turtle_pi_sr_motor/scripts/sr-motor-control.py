@@ -50,7 +50,7 @@ class ShiftRegisterMotorControl:
     MOTOR4_EN = 21 # Arduino D6
 
     # PWM control frequency (Hz)
-    PWM_FREQ = 500
+    PWM_FREQ = 50
 
     @staticmethod
     def initializeGpios():
@@ -191,24 +191,30 @@ def rightWheelCallback(data):
 
     # TODO: Check if we're already going in the right direction - no need to reload if so
 
-    if data.data == 1:
+    if data.data > 0:
         motorR.setDirection(ShiftRegisterMotorControl.FORWARD)
-    elif data.data == -1:
+        motorR.setSpeed(data.data)
+    elif data.data < 0:
         motorR.setDirection(ShiftRegisterMotorControl.BACKWARD)
+        motorR.setSpeed(-data.data)
     elif data.data == 0:
         motorR.setDirection(ShiftRegisterMotorControl.RELEASE)
+        motorR.setSpeed(0)
     else:
         rospy.loginfo(rospy.get_caller_id() + " Unknown command %s", data.data)
 
 def leftWheelCallback(data):
     rospy.loginfo(rospy.get_caller_id() + " - Setting Left Wheel Direction %s", data.data)
 
-    if data.data == 1:
+    if data.data > 0:
         motorL.setDirection(ShiftRegisterMotorControl.FORWARD)
-    elif data.data == -1:
+        motorL.setSpeed(data.data)
+    elif data.data < 0:
         motorL.setDirection(ShiftRegisterMotorControl.BACKWARD)
+        motorL.setSpeed(-data.data)
     elif data.data == 0:
         motorL.setDirection(ShiftRegisterMotorControl.RELEASE)
+        motorL.setSpeed(0)
     else:
         rospy.loginfo(rospy.get_caller_id() + " Unknown command %s", data.data)
 
