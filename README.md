@@ -80,11 +80,7 @@ OK - Looks good - ROS Teleop is subscribing on /compressed_image
 Need to execute:
 
 ```
-$ rosrun dynamic_reconfigure dynparam load /raspicam_node raspicam_config.yaml
-$ roslaunch raspicam_node camerav2_1280x960.launch
-$ rosrun topic_tools relay  /raspicam_node/image/compressed /compressed_image
 $ roslaunch turtle_pi turtle_pi.launch
-$ rosrun turtle_twist_ctrl turtle_twist_ctrl.py
 ```
 
 Can use rqt_image_viewer to preview image from turtlepi
