@@ -50,7 +50,7 @@ class ShiftRegisterMotorControl:
     MOTOR4_EN = 21 # Arduino D6
 
     # PWM control frequency (Hz)
-    PWM_FREQ = 500
+    PWM_FREQ = 50
 
     @staticmethod
     def initializeGpios():
