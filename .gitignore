@@ -2,3 +2,5 @@
 log
 *.swp
 build/
+devel/
+src/raspicam_node
