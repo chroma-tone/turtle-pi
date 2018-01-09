@@ -1,5 +1,5 @@
 <launch>
-    <include file="$(find raspicam_node)/launch/camerav2_1280x960.launch" />
+    <include file="$(find raspicam_node)/launch/camerav2_410x308_30fps.launch" />
     <node name="turtle_pi_sr_motor" pkg="turtle_pi_sr_motor" type="sr-motor-control.py" />
     <node name="turtle_twist_control" pkg="turtle_twist_ctrl" type="turtle_twist_ctrl.py" />
     <node name="camera_configure" pkg="dynamic_reconfigure" type="dynparam" args="load /raspicam_node $(find turtle_pi)/config/raspicam_config.yaml" />
