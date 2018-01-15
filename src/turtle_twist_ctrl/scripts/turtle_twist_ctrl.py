@@ -10,7 +10,7 @@ class TurtleTwistControl:
         nodename = rospy.get_name()
         rospy.loginfo("%s started" % nodename)
     
-        self.w = rospy.get_param("~base_width", 1.0)
+        self.w = rospy.get_param("~base_width", 0.5)
         self.pub_lmotor = rospy.Publisher('/left_wheel', Int16, queue_size=10)
         self.pub_rmotor = rospy.Publisher('/right_wheel', Int16, queue_size=10)
     
@@ -19,7 +19,7 @@ class TurtleTwistControl:
         
     def twistCallback(self, msg):
         self.dx = msg.linear.x
-        self.dr = msg.angular.z * 180.0 / pi
+        self.dr = -msg.angular.z * 180.0 / pi
 
         # dx = (l + r) / 2
         # dr = (r - l) / w

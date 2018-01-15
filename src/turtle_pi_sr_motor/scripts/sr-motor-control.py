@@ -12,6 +12,8 @@ class ShiftRegisterMotorControl:
     latchState = 0
     gpiosInitialized = False
 
+    # Ref https://cdn-learn.adafruit.com/assets/assets/000/009/769/original/mshieldv1-schem.png
+    # TODO: Motor 3 and 4 don't seem to be working - need to investigate why later
     # Bit positions in the 74HCT595 shift register output
     MOTOR1_A = 2
     MOTOR1_B = 3
@@ -225,10 +227,10 @@ def listener():
     rospy.spin()
 
 if __name__ == '__main__':
-    motorL = ShiftRegisterMotorControl(2)
+    motorL = ShiftRegisterMotorControl(1)
     motorL.setSpeed(80)
 
-    motorR = ShiftRegisterMotorControl(1)
+    motorR = ShiftRegisterMotorControl(2)
     motorR.setSpeed(80)
 
     listener()
