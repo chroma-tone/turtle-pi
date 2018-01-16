@@ -28,6 +28,7 @@ LIBS:opto
 LIBS:atmel
 LIBS:contrib
 LIBS:valves
+LIBS:turtle-pi-cache
 EELAYER 25 0
 EELAYER END
 $Descr A4 11693 8268
@@ -56,12 +57,12 @@ $EndComp
 $Comp
 L +5V #PWR1
 U 1 1 5A55D08E
-P 1950 2200
-F 0 "#PWR1" H 1950 2050 50  0001 C CNN
-F 1 "+5V" H 1950 2340 50  0000 C CNN
-F 2 "" H 1950 2200 50  0000 C CNN
-F 3 "" H 1950 2200 50  0000 C CNN
-	1    1950 2200
+P 1950 1850
+F 0 "#PWR1" H 1950 1700 50  0001 C CNN
+F 1 "+5V" H 1950 1990 50  0000 C CNN
+F 2 "" H 1950 1850 50  0000 C CNN
+F 3 "" H 1950 1850 50  0000 C CNN
+	1    1950 1850
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -78,12 +79,12 @@ $EndComp
 $Comp
 L R R1
 U 1 1 5A55D0CA
-P 1800 2900
-F 0 "R1" V 1880 2900 50  0000 C CNN
-F 1 "200" V 1800 2900 50  0000 C CNN
-F 2 "" V 1730 2900 50  0000 C CNN
-F 3 "" H 1800 2900 50  0000 C CNN
-	1    1800 2900
+P 1950 2050
+F 0 "R1" V 2030 2050 50  0000 C CNN
+F 1 "200" V 1950 2050 50  0000 C CNN
+F 2 "" V 1880 2050 50  0000 C CNN
+F 3 "" H 1950 2050 50  0000 C CNN
+	1    1950 2050
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -100,9 +101,7 @@ $EndComp
 Wire Wire Line
 	1950 2650 1800 2650
 Wire Wire Line
-	1800 2650 1800 2750
-Wire Wire Line
-	1800 3050 1800 3200
+	1800 2650 1800 3200
 Wire Wire Line
 	1800 3200 2550 3200
 Wire Wire Line
@@ -140,7 +139,7 @@ Connection ~ 1950 2300
 Wire Wire Line
 	1550 3150 1800 3150
 Connection ~ 1800 3150
-Text Notes 1200 1850 0    60   ~ 0
+Text Notes 1250 1500 0    60   ~ 0
 Wheel Encoder Prototype connections
 Text Notes 2650 3000 0    60   ~ 0
 NOTE: Pinout doesn't match real device...
@@ -148,4 +147,6 @@ Wire Notes Line
 	2850 2900 2850 2550
 Wire Notes Line
 	2850 2550 2450 2550
+Wire Wire Line
+	1950 1850 1950 1900
 $EndSCHEMATC
