@@ -11,8 +11,8 @@ class TurtleTwistControl:
         rospy.loginfo("%s started" % nodename)
     
         self.w = rospy.get_param("~base_width", 0.5)
-        self.pub_lmotor = rospy.Publisher('/left_wheel', Int16, queue_size=10)
-        self.pub_rmotor = rospy.Publisher('/right_wheel', Int16, queue_size=10)
+        self.pub_lmotor = rospy.Publisher('/lmotor', Int16, queue_size=10)
+        self.pub_rmotor = rospy.Publisher('/rmotor', Int16, queue_size=10)
     
         self.left = 0
         self.right = 0

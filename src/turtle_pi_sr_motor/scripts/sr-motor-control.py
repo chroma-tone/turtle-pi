@@ -6,6 +6,7 @@ from time import time
 
 import rospy
 from std_msgs.msg import Int16
+from std_msgs.msg import Float32
 
 class ShiftRegisterMotorControl:
     # Static state of latch across all ShiftRegisterMotorControl instances
@@ -153,7 +154,7 @@ class ShiftRegisterMotorControl:
 
     def setSpeed(this, percentSpeed):
         print "Changing duty cycle to " + str(percentSpeed)
-        this.motorPwm.ChangeDutyCycle(percentSpeed)
+        this.motorPwm.ChangeDutyCycle(int(percentSpeed))
 
 def test1():
     motor1 = ShiftRegisterMotorControl(1)
@@ -222,20 +223,20 @@ def leftWheelCallback(data):
 
 def listener():
     rospy.init_node('turtle_pi', anonymous=True)
-    rospy.Subscriber("right_wheel", Int16, rightWheelCallback)
-    rospy.Subscriber("left_wheel", Int16, leftWheelCallback)
+    rospy.Subscriber("rmotor", Float32, rightWheelCallback)
+    rospy.Subscriber("lmotor", Float32, leftWheelCallback)
     rospy.spin()
 
 if __name__ == '__main__':
     motorL = ShiftRegisterMotorControl(1)
-    motorL.setSpeed(80)
+    motorL.setSpeed(80.0)
 
     motorR = ShiftRegisterMotorControl(2)
-    motorR.setSpeed(80)
+    motorR.setSpeed(80.0)
 
     listener()
-    motorL.setSpeed(0)
-    motorR.setSpeed(0)
+    motorL.setSpeed(0.0)
+    motorR.setSpeed(0.0)
 
 GPIO.cleanup()
 

@@ -3,6 +3,7 @@
 import rospy
 import RPi.GPIO as GPIO
 from std_msgs.msg import Int16
+from std_msgs.msg import Float32
 
 LWHEEL_ENCODER_PIN = 14
 RWHEEL_ENCODER_PIN = 15
@@ -41,27 +42,27 @@ def init_wheel_encoders():
     GPIO.add_event_detect(RWHEEL_ENCODER_PIN, GPIO.RISING)
     GPIO.add_event_callback(RWHEEL_ENCODER_PIN, r_encoder_tick)
 
-    l_tick_topic = rospy.Publisher('/left_wheel_ticks', Int16, queue_size=10)
-    r_tick_topic = rospy.Publisher('/right_wheel_ticks', Int16, queue_size=10)
+    l_tick_topic = rospy.Publisher('/lwheel', Int16, queue_size=10)
+    r_tick_topic = rospy.Publisher('/rwheel', Int16, queue_size=10)
     l_tick_count = 0
     r_tick_count = 0
 
 def right_wheel_callback(data):
     global r_tick_direction
-    if data.data > 0:
+    if data.data > 0.01:
         r_tick_direction = 1
-    elif data.data < 0:
+    elif data.data < -0.01:
         r_tick_direction = -1
-    elif data.data == 0:
+    elif abs(data.data) <= 0.01:
         pass # leave as it was, assume that any further ticks are in the same direction
 
 def left_wheel_callback(data):
     global l_tick_direction
-    if data.data > 0:
+    if data.data > 0.01:
         l_tick_direction = 1
-    elif data.data < 0:
+    elif data.data < -0.01:
         l_tick_direction = -1
-    elif data.data == 0:
+    elif abs(data.data) <= 0.01:
         pass # leave as it was, assume that any further ticks are in the same direction
         
 def monitor_wheel_commands():
@@ -70,8 +71,8 @@ def monitor_wheel_commands():
     r_tick_direction = 0
     l_tick_direction = 0
 
-    rospy.Subscriber("right_wheel", Int16, right_wheel_callback)
-    rospy.Subscriber("left_wheel", Int16, left_wheel_callback)
+    rospy.Subscriber("rmotor", Float32, right_wheel_callback)
+    rospy.Subscriber("lmotor", Float32, left_wheel_callback)
 
 def waitForInterrupts():
     rospy.spin()

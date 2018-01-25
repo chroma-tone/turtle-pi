@@ -4,3 +4,5 @@ log
 build/
 devel/
 src/raspicam_node
+src/differential_drive
+
