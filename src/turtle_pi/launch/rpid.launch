@@ -1,0 +1,16 @@
+<launch>
+    <node pkg="differential_drive" type="pid_velocity.py" name="rpid_velocity">
+        <remap from="wheel" to="rwheel"/>
+        <remap from="motor_cmd" to="rmotor"/>
+        <remap from="wheel_vtarget" to="rwheel_vtarget"/>
+        <remap from="wheel_vel" to="rwheel_vel"/>
+        <rosparam param="Kp">6</rosparam>
+        <rosparam param="Ki">24</rosparam>
+        <rosparam param="Kd">0</rosparam>
+        <rosparam param="out_min">-100</rosparam>
+        <rosparam param="out_max">100</rosparam>
+        <rosparam param="rate">30</rosparam>
+        <rosparam param="timeout_ticks">4</rosparam>
+        <rosparam param="rolling_pts">5</rosparam>
+    </node>
+</launch>

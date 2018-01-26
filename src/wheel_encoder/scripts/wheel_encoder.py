@@ -5,8 +5,8 @@ import RPi.GPIO as GPIO
 from std_msgs.msg import Int16
 from std_msgs.msg import Float32
 
-LWHEEL_ENCODER_PIN = 14
-RWHEEL_ENCODER_PIN = 15
+RWHEEL_ENCODER_PIN = 14
+LWHEEL_ENCODER_PIN = 15
 
 def l_encoder_tick(channel):
     global l_tick_count

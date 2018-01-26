@@ -1,6 +1,6 @@
 <launch>
-    <rosparam param="ticks_meter">137</rosparam>
     <rosparam param="base_width">0.14</rosparam>
+    <rosparam param="ticks_meter">137</rosparam>
 
     <include file="$(find raspicam_node)/launch/camerav2_410x308_30fps.launch" />
     <node name="turtle_pi_sr_motor" pkg="turtle_pi_sr_motor" type="sr-motor-control.py" />
@@ -12,13 +12,13 @@
     <node name="twist_to_motors" pkg="differential_drive" type="twist_to_motors.py" />
     <node name="wheel_encoder" pkg="wheel_encoder" type="wheel_encoder.py" />
 
-    <node pkg="differential_drive" type="pid_velocity.py" name="lpid_velocity">
+    <node pkg="differential_drive" type="pid_velocity.py" name="lpid_velocity" output="screen">
         <remap from="wheel" to="lwheel"/>
         <remap from="motor_cmd" to="lmotor"/>
         <remap from="wheel_vtarget" to="lwheel_vtarget"/>
         <remap from="wheel_vel" to="lwheel_vel"/>
-        <rosparam param="Kp">200</rosparam>
-        <rosparam param="Ki">200</rosparam>
+        <rosparam param="Kp">6</rosparam>
+        <rosparam param="Ki">18</rosparam>
         <rosparam param="Kd">0</rosparam>
         <rosparam param="out_min">-100</rosparam>
         <rosparam param="out_max">100</rosparam>
@@ -31,8 +31,8 @@
         <remap from="motor_cmd" to="rmotor"/>
         <remap from="wheel_vtarget" to="rwheel_vtarget"/>
         <remap from="wheel_vel" to="rwheel_vel"/>
-        <rosparam param="Kp">200</rosparam>
-        <rosparam param="Ki">200</rosparam>
+        <rosparam param="Kp">6</rosparam>
+        <rosparam param="Ki">24</rosparam>
         <rosparam param="Kd">0</rosparam>
         <rosparam param="out_min">-100</rosparam>
         <rosparam param="out_max">100</rosparam>
