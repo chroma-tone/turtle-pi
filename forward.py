@@ -13,7 +13,7 @@ class Forward():
     #############################################################
         rospy.init_node("forward")
 
-        self.speed = 2.0
+        self.speed = 0.5
         self.pub_lmotor = rospy.Publisher('lwheel_vtarget', Float32, queue_size=10)
         self.pub_rmotor = rospy.Publisher('rwheel_vtarget', Float32, queue_size=10)
 

@@ -4,9 +4,10 @@
     <rosparam param="ticks_meter">330</rosparam>
 
     <include file="$(find raspicam_node)/launch/camerav2_410x308_30fps.launch" />
-    <node name="turtle_pi_sr_motor" pkg="turtle_pi_sr_motor" type="sr-motor-control.py" />
     <node name="camera_configure" pkg="dynamic_reconfigure" type="dynparam" args="load /raspicam_node $(find turtle_pi)/config/raspicam_config.yaml" />
     <node name="camera_relay" pkg="topic_tools" type="relay" args="/raspicam_node/image/compressed /compressed_image" />
+
+    <node name="turtle_pi_sr_motor" pkg="turtle_pi_sr_motor" type="sr-motor-control.py" />
     <node name="twist_relay" pkg="topic_tools" type="relay" args="/cmd_vel /twist" />
     <node name="twist_to_motors" pkg="differential_drive" type="twist_to_motors.py" />
     <node name="wheel_encoder" pkg="wheel_encoder" type="wheel_encoder.py" />
@@ -15,16 +16,16 @@
         <rosparam param="rate">8.0</rosparam>
         <rosparam param="base_width">0.245</rosparam>
     </node>
-    <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" /> 
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" /> 
 
     <node pkg="differential_drive" type="pid_velocity.py" name="lpid_velocity" output="screen">
         <remap from="wheel" to="lwheel"/>
         <remap from="motor_cmd" to="lmotor"/>
         <remap from="wheel_vtarget" to="lwheel_vtarget"/>
         <remap from="wheel_vel" to="lwheel_vel"/>
-        <rosparam param="Kp">12</rosparam>
-        <rosparam param="Ki">18</rosparam>
-        <rosparam param="Kd">0</rosparam>
+        <rosparam param="Kp">100</rosparam>
+        <rosparam param="Ki">500</rosparam>
+        <rosparam param="Kd">2</rosparam>
         <rosparam param="out_min">-100</rosparam>
         <rosparam param="out_max">100</rosparam>
         <rosparam param="rate">30</rosparam>
@@ -36,9 +37,9 @@
         <remap from="motor_cmd" to="rmotor"/>
         <remap from="wheel_vtarget" to="rwheel_vtarget"/>
         <remap from="wheel_vel" to="rwheel_vel"/>
-        <rosparam param="Kp">12</rosparam>
-        <rosparam param="Ki">18</rosparam>
-        <rosparam param="Kd">0</rosparam>
+        <rosparam param="Kp">100</rosparam>
+        <rosparam param="Ki">500</rosparam>
+        <rosparam param="Kd">2</rosparam>
         <rosparam param="out_min">-100</rosparam>
         <rosparam param="out_max">100</rosparam>
         <rosparam param="rate">30</rosparam>
