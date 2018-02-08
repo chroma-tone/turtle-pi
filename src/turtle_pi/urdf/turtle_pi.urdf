@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<robot name="turtle_pi">
+  <link name="base_link">
+    <visual>
+      <geometry>
+        <mesh filename="package://turtle_pi/urdf/meshes/turtle_pi_chassis.dae"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <link name="left_wheel">
+    <visual>
+      <geometry>
+        <mesh filename="package://turtle_pi/urdf/meshes/turtle_pi_wheel.dae"/>
+      </geometry>
+    </visual>
+  </link>
+  
+  <link name="right_wheel">
+    <visual>
+      <geometry>
+        <mesh filename="package://turtle_pi/urdf/meshes/turtle_pi_wheel.dae"/>
+      </geometry>
+      <origin rpy="0 3.1415 0" xyz="0 0 0"/>
+    </visual>
+  </link>
+  
+  <joint name="left_wheel_joint" type="continuous">
+    <axis xyz="1 0 0"/>
+    <origin rpy="0 0 0" xyz="-0.004304 0.072475 0.032413"/>
+    <parent link="base_link"/>
+    <child link="left_wheel"/>
+  </joint>
+
+  <joint name="right_wheel_joint" type="continuous">
+    <axis xyz="1 0 0"/>
+    <origin rpy="0 0 0" xyz="0.097396 0.072475 0.032413"/>
+    <parent link="base_link"/>
+    <child link="right_wheel"/>
+  </joint>
+</robot>
