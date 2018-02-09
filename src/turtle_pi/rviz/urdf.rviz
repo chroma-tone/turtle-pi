@@ -9,8 +9,6 @@ Panels:
         - /Grid1
         - /RobotModel1
         - /RobotModel1/Links1
-        - /Axes1
-        - /Axes2
       Splitter Ratio: 0.5
     Tree Height: 754
   - Class: rviz/Selection
@@ -84,20 +82,6 @@ Visualization Manager:
       Update Interval: 0
       Value: true
       Visual Enabled: true
-    - Class: rviz/Axes
-      Enabled: true
-      Length: 0.5
-      Name: Axes
-      Radius: 0.00999999978
-      Reference Frame: base_link
-      Value: true
-    - Class: rviz/Axes
-      Enabled: true
-      Length: 0.100000001
-      Name: Axes
-      Radius: 0.00999999978
-      Reference Frame: left_wheel
-      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -123,25 +107,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 0.836632907
+      Distance: 0.539344192
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.0599999987
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 0.0414764136
-        Y: -0.0289944485
-        Z: 0.0344743431
+        X: 0.0333151594
+        Y: -0.0129169151
+        Z: 0.039852038
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.0500000007
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Pitch: 0.280202448
+      Pitch: 0.180202767
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 2.69672251
+      Yaw: 3.26175475
     Saved: ~
 Window Geometry:
   Displays:
