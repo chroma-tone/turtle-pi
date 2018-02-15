@@ -1,8 +1,8 @@
-prefix=/home/turtlebot/git/turtle-pi/devel
+prefix=/home/jeremy/git/turtle-pi/devel
 
 Name: turtle_pi
 Description: Description of turtle_pi
 Version: 0.0.0
 Cflags: 
-Libs: -L/home/turtlebot/git/turtle-pi/devel/lib 
+Libs: -L/home/jeremy/git/turtle-pi/devel/lib 
 Requires: 
