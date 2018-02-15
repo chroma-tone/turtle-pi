@@ -20,6 +20,7 @@
 
   <link name="left_wheel">
     <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
         <mesh filename="package://turtle_pi/urdf/meshes/turtle_pi_wheel.dae"/>
       </geometry>
@@ -29,7 +30,7 @@
       <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
     </inertial>
     <collision>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <origin xyz="-0.0125 0 0" rpy="0 1.57079632679 0"/>
       <geometry>
         <cylinder length="0.025" radius="0.035"/>
       </geometry>
@@ -38,17 +39,17 @@
   
   <link name="right_wheel">
     <visual>
+      <origin rpy="0 3.1415 0" xyz="0 0 0"/>
       <geometry>
         <mesh filename="package://turtle_pi/urdf/meshes/turtle_pi_wheel.dae"/>
       </geometry>
-      <origin rpy="0 3.1415 0" xyz="0 0 0"/>
     </visual>
     <inertial>
       <mass value="1"/>
       <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
     </inertial>
     <collision>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <origin xyz="0.0125 0 0" rpy="0 -1.57079632679 0"/>
       <geometry>
         <cylinder length="0.025" radius="0.035"/>
       </geometry>
