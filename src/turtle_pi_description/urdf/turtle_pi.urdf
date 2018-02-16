@@ -3,7 +3,7 @@
   <link name="base_link">
     <visual>
       <geometry>
-        <mesh filename="package://turtle_pi/urdf/meshes/turtle_pi_chassis.dae"/>
+        <mesh filename="package://turtle_pi_description/urdf/meshes/turtle_pi_chassis.dae"/>
       </geometry>
     </visual>
     <inertial>
@@ -13,6 +13,7 @@
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
+        <mesh filename="package://turtle_pi_description/urdf/meshes/turtle_pi_chassis_collision.stl"/>
         <box size="0.22 0.10 0.05"/>
       </geometry>
     </collision>
@@ -22,7 +23,7 @@
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
-        <mesh filename="package://turtle_pi/urdf/meshes/turtle_pi_wheel.dae"/>
+        <mesh filename="package://turtle_pi_description/urdf/meshes/turtle_pi_wheel.dae"/>
       </geometry>
     </visual>
     <inertial>
@@ -41,7 +42,7 @@
     <visual>
       <origin rpy="0 3.1415 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://turtle_pi/urdf/meshes/turtle_pi_wheel.dae"/>
+        <mesh filename="package://turtle_pi_description/urdf/meshes/turtle_pi_wheel.dae"/>
       </geometry>
     </visual>
     <inertial>
