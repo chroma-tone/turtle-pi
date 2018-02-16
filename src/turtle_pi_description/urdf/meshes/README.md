@@ -7,3 +7,10 @@ To create the turtle_pi_chassis_collision.dae file:
 5. Click Object -> Apply -> Scale to apply this scale.
 6. File -> Export -> STL, and save as turtle_pi_chassis_collision.stl
 7. Import the file into Meshlab, then re-export as .dae
+
+To calculate the Inertia Tensor:
+1. Open the file in Meshlab
+2. Filters -> Quality Measures and Computations -> Compute Geometric Measures
+3. The Inertia Tensor will be displayed in the output window.
+4. However, the values need to be divided by the volume to get the final answer
+5. These results can be copy / pasted in to the urdf file.

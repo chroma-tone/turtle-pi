@@ -8,7 +8,7 @@
     </visual>
     <inertial>
       <mass value="1"/>
-      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+      <inertia ixx="0.0049669" ixy="0.0" ixz="0.0" iyy="0.0016556" iyz="0.0" izz="0.0049669"/>
     </inertial>
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -27,11 +27,11 @@
       </geometry>
     </visual>
     <inertial>
-      <mass value="1"/>
-      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+      <mass value="0.1"/>
+      <inertia ixx="0.001" ixy="0.0" ixz="0.0" iyy="0.001" iyz="0.0" izz="0.001"/>
     </inertial>
     <collision>
-      <origin xyz="-0.0125 0 0" rpy="0 1.57079632679 0"/>
+      <origin xyz="-0.0175 0 0" rpy="0 1.57079632679 0"/>
       <geometry>
         <cylinder length="0.025" radius="0.035"/>
       </geometry>
@@ -46,11 +46,11 @@
       </geometry>
     </visual>
     <inertial>
-      <mass value="1"/>
-      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+      <mass value="0.1"/>
+      <inertia ixx="0.001" ixy="0.0" ixz="0.0" iyy="0.001" iyz="0.0" izz="0.001"/>
     </inertial>
     <collision>
-      <origin xyz="0.0125 0 0" rpy="0 -1.57079632679 0"/>
+      <origin xyz="0.0175 0 0" rpy="0 -1.57079632679 0"/>
       <geometry>
         <cylinder length="0.025" radius="0.035"/>
       </geometry>
