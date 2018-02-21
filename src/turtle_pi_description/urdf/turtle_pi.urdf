@@ -19,6 +19,14 @@
     </collision>
   </link>
 
+  <gazebo reference="base_link">
+    <mu1 value="0.1"/>
+    <mu2 value="0.1"/>
+    <kp value="10000000.0" />
+    <kd value="1.0" />
+    <material>Gazebo/Black</material>
+  </gazebo>
+
   <link name="left_wheel">
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -59,18 +67,55 @@
   </link>
   
   <joint name="left_wheel_joint" type="continuous">
-    <axis xyz="1 0 0"/>
+    <axis xyz="-1 0 0"/>
     <origin rpy="0 0 0" xyz="-0.050850 0.085775 -0.011100"/>
     <parent link="base_link"/>
     <child link="left_wheel"/>
   </joint>
 
+  <transmission name="left_wheel_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <actuator name="left_wheel_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+    <joint name="left_wheel_joint">
+      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+    </joint>
+  </transmission>
+
   <joint name="right_wheel_joint" type="continuous">
-    <axis xyz="1 0 0"/>
+    <axis xyz="-1 0 0"/>
     <origin rpy="0 0 0" xyz="0.050850 0.085775 -0.011100"/>
     <parent link="base_link"/>
     <child link="right_wheel"/>
   </joint>
+
+  <transmission name="right_wheel_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <actuator name="right_wheel_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+    <joint name="right_wheel_joint">
+      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+    </joint>
+  </transmission>
+
+  <gazebo reference="left_wheel">
+    <mu1 value="200.0"/>
+    <mu2 value="100.0"/>
+    <kp value="10000000.0" />
+    <kd value="1.0" />
+    <material>Gazebo/Black</material>
+  </gazebo>
+
+  <gazebo reference="right_wheel">
+    <mu1 value="200.0"/>
+    <mu2 value="100.0"/>
+    <kp value="10000000.0" />
+    <kd value="1.0" />
+    <material>Gazebo/Black</material>
+  </gazebo>
+
   <gazebo>
     <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
       <robotNamespace>/</robotNamespace>

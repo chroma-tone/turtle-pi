@@ -28,4 +28,25 @@
   <!-- ros_control turtle_pi launch file -->
   <!--include file="$(find turtle_pi)/launch/turtle_pi.launch" /-->
 
+  <node pkg="robot_state_publisher" type="robot_state_publisher"  name="robot_state_publisher">
+    <param name="publish_frequency" type="double" value="30.0" />
+  </node>
+
+  <rosparam command="load"
+            file="$(find turtle_pi_description)/config/joints.yaml"
+            ns="turtle_pi_joint_state_controller" />
+
+  <rosparam command="load"
+            file="$(find turtle_pi_description)/config/diffdrive.yaml"
+            ns="turtle_pi_diff_drive_controller" />
+
+  <node name="turtle_pi_controller_spawner" pkg="controller_manager" type="spawner"
+    args="turtle_pi_joint_state_controller 
+          turtle_pi_diff_drive_controller"/>
+
+  <node name="twist_relay" pkg="topic_tools" type="relay" args="/cmd_vel /turtle_pi_diff_drive_controller/cmd_vel" />
+
+  <!--node name="rqt_robot_steering" pkg="rqt_robot_steering" type="rqt_robot_steering">
+    <param name="default_topic" value="/turtle_pi_diff_drive_controller/cmd_vel"/>
+  </node-->
 </launch>
