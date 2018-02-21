@@ -25,6 +25,8 @@
   <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
     args="-urdf -model turtle_pi -param robot_description"/>
 
+  <node name="camera_relay" pkg="topic_tools" type="relay" args="/turtle_pi/camera/image_raw/compressed /compressed_image" />
+
   <!-- ros_control turtle_pi launch file -->
   <!--include file="$(find turtle_pi)/launch/turtle_pi.launch" /-->
 
