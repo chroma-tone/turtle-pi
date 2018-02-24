@@ -62,7 +62,7 @@
     </light>
     <gui fullscreen='0'>
       <camera name='user_camera'>
-        <pose frame=''>2.7508 -3.6746 3.1732 0 0.275643 2.35619</pose>
+        <pose frame=''>2.14126 1.31342 1.71838 0 0.599643 -2.29899</pose>
         <view_controller>orbit</view_controller>
         <projection_type>perspective</projection_type>
       </camera>
@@ -415,18 +415,18 @@
       <pose frame=''>-0.496112 2.3768 0 0 -0 0</pose>
     </model>
     <state world_name='default'>
-      <sim_time>183 342000000</sim_time>
-      <real_time>15 357955700</real_time>
-      <wall_time>1519204231 45080479</wall_time>
-      <iterations>15093</iterations>
+      <sim_time>401 813000000</sim_time>
+      <real_time>85 391029352</real_time>
+      <wall_time>1519464161 625730418</wall_time>
+      <iterations>84451</iterations>
       <model name='Dumpster'>
         <pose frame=''>1.83081 -0.760097 0.000917 0 -2e-06 0</pose>
         <scale>1 1 1</scale>
         <link name='link'>
           <pose frame=''>1.83081 -0.760097 0.000917 0 -2e-06 0</pose>
           <velocity>0 0 0 0 -0 0</velocity>
-          <acceleration>-0.006033 0 0 -0 -0.280683 4e-06</acceleration>
-          <wrench>-0.006033 0 0 0 -0 0</wrench>
+          <acceleration>-0.006033 0 1e-06 -0 -0.280683 4e-06</acceleration>
+          <wrench>-0.006033 0 1e-06 0 -0 0</wrench>
         </link>
       </model>
       <model name='cafe_table'>
@@ -440,13 +440,13 @@
         </link>
       </model>
       <model name='cube_20k'>
-        <pose frame=''>-0.481002 2.34428 0.5 0 1e-06 0.000405</pose>
+        <pose frame=''>-0.481006 2.34428 0.5 0 1e-06 0.000403</pose>
         <scale>1 1 1</scale>
         <link name='link'>
-          <pose frame=''>-0.481002 2.34428 1 0 1e-06 0.000405</pose>
+          <pose frame=''>-0.481005 2.34428 1 0 1e-06 0.000403</pose>
           <velocity>0 0 0 0 -0 0</velocity>
-          <acceleration>2.61577 0.054065 -0.499762 3.08765 0.526106 3.14122</acceleration>
-          <wrench>2.61577 0.054065 -0.499762 0 -0 0</wrench>
+          <acceleration>2.61577 0.054058 -0.499762 3.08765 0.526106 3.14122</acceleration>
+          <wrench>2.61577 0.054058 -0.499762 0 -0 0</wrench>
         </link>
       </model>
       <model name='ground_plane'>
@@ -469,6 +469,9 @@
           <wrench>0 0 0 0 -0 0</wrench>
         </link>
       </model>
+      <light name='sun'>
+        <pose frame=''>0 0 10 0 -0 0</pose>
+      </light>
     </state>
   </world>
 </sdf>
