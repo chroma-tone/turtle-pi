@@ -20,3 +20,11 @@ TurtlePiHal::TurtlePiHal()
 
     registerInterface(&jnt_pos_interface);
 }
+
+void TurtlePiHal::read() {
+    printf("HAL: Reading\n");
+}
+
+void TurtlePiHal::write() {
+    printf("HAL: write\n");
+}

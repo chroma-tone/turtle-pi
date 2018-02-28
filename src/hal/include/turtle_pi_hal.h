@@ -5,7 +5,9 @@
 class TurtlePiHal : public hardware_interface::RobotHW
 {
 public:
-  TurtlePiHal() ;
+  TurtlePiHal();
+  virtual void read();
+  virtual void write();
 
 private:
   hardware_interface::JointStateInterface jnt_state_interface;
