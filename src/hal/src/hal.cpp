@@ -2,6 +2,8 @@
 #include <controller_manager/controller_manager.h>
 #include <unistd.h>
 #include <signal.h>
+#include <sensor_msgs/JointState.h>
+#include <ros/callback_queue.h>
 
 #define MILLISECONDS 1000
 
@@ -11,14 +13,41 @@ void quitRequested(int sig) {
   g_quit = true;
 }
 
+void SetJointStates(const sensor_msgs::JointState::ConstPtr &_js)
+{
+  static ros::Time startTime = ros::Time::now();
+
+  printf("In callback = js: %s\n", _js->name[0].c_str());
+}
+
+void subscribeToJointStates(ros::NodeHandle *nh) {
+ // ros topic subscriptions
+  ros::SubscribeOptions jointStatesSo = ros::SubscribeOptions::create<sensor_msgs::JointState>(
+    "/joint_states", 1, SetJointStates,
+    ros::VoidPtr(), nh->getCallbackQueue());
+
+  // Because TCP causes bursty communication with high jitter,
+  // declare a preference on UDP connections for receiving
+  // joint states, which we want to get at a high rate.
+  // Note that we'll still accept TCP connections for this topic
+  // (e.g., from rospy nodes, which don't support UDP);
+  // we just prefer UDP.
+  jointStatesSo.transport_hints = ros::TransportHints().unreliable();
+
+  ros::Subscriber subJointStates = nh->subscribe(jointStatesSo);
+  printf("Subscribed to JointStates\n");
+}
+
 int main(int argc, char **argv)
 {
-  ros::Duration elapsed_time;
-  struct timespec last_time, current_time;
-  static const double BILLION = 1000000000.0;
-
   ros::init(argc, argv, "turtle_pi_hal");
   ros::NodeHandle nh;
+
+  ros::CallbackQueue queue;
+  nh.setCallbackQueue(&queue);
+
+  ros::AsyncSpinner spinner(4, &queue);
+  spinner.start();
 
   // Add custom signal handlers
   signal(SIGTERM, quitRequested);
@@ -28,27 +57,24 @@ int main(int argc, char **argv)
   TurtlePiHal turtle_pi_robot;
   controller_manager::ControllerManager cm(&turtle_pi_robot, nh);
 
-  clock_gettime(CLOCK_MONOTONIC, &last_time);
-  ros::Rate r(3);
+  subscribeToJointStates(&nh);
 
+  ros::Time ts = ros::Time::now();
+  ros::Rate rate(3);
+  //while (ros::ok())
   while (!g_quit)
   {
+    ros::Duration d = ros::Time::now() - ts;
+    ts = ros::Time::now();
+
     turtle_pi_robot.read();
-
-    // Control
-    clock_gettime(CLOCK_MONOTONIC, &current_time);
-    elapsed_time = ros::Duration(current_time.tv_sec - last_time.tv_sec + (current_time.tv_nsec - last_time.tv_nsec) / BILLION);
-    ros::Time ros_time = ros::Time::now();
-
-    cm.update(ros_time, elapsed_time);
-    //cm.update(turtle_pi_robot.get_time(), turtle_pi_robot.get_period());
-    last_time = current_time;
-
+    cm.update(ts, d);
     turtle_pi_robot.write();
 
-    ros::spinOnce();
-    r.sleep();
+    rate.sleep();
   }
+
+  spinner.stop();
 
 	exit(0);
 }

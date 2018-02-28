@@ -35,8 +35,7 @@
   </node>
 
   <rosparam command="load"
-            file="$(find turtle_pi_description)/config/joints.yaml"
-            ns="turtle_pi_joint_state_controller" />
+            file="$(find turtle_pi_description)/config/joints.yaml"/>
 
   <rosparam command="load"
             file="$(find turtle_pi_description)/config/diffdrive.yaml"
