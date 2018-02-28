@@ -1,7 +1,6 @@
 #include "turtle_pi_hal.h"
 #include <controller_manager/controller_manager.h>
 #include <unistd.h>
-#include <time.h>
 #include <signal.h>
 
 #define MILLISECONDS 1000
@@ -30,6 +29,8 @@ int main(int argc, char **argv)
   controller_manager::ControllerManager cm(&turtle_pi_robot, nh);
 
   clock_gettime(CLOCK_MONOTONIC, &last_time);
+  ros::Rate r(3);
+
   while (!g_quit)
   {
     turtle_pi_robot.read();
@@ -38,12 +39,15 @@ int main(int argc, char **argv)
     clock_gettime(CLOCK_MONOTONIC, &current_time);
     elapsed_time = ros::Duration(current_time.tv_sec - last_time.tv_sec + (current_time.tv_nsec - last_time.tv_nsec) / BILLION);
     ros::Time ros_time = ros::Time::now();
+
     cm.update(ros_time, elapsed_time);
     //cm.update(turtle_pi_robot.get_time(), turtle_pi_robot.get_period());
     last_time = current_time;
 
     turtle_pi_robot.write();
-    usleep(10 * MILLISECONDS);
+
+    ros::spinOnce();
+    r.sleep();
   }
 
 	exit(0);
