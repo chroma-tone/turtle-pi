@@ -35,19 +35,15 @@
   </node>
 
   <rosparam command="load"
-            file="$(find turtle_pi_description)/config/joints.yaml"/>
+            file="$(find turtle_pi_description)/config/turtle_pi.yaml"/>
 
-  <rosparam command="load"
-            file="$(find turtle_pi_description)/config/diffdrive.yaml"
-            ns="turtle_pi_diff_drive_controller" />
-
-  <node name="turtle_pi_controller_spawner" pkg="controller_manager" type="spawner"
+  <node name="turtle_pi_controller_spawner" pkg="controller_manager" type="spawner" output="screen" respawn="false"
     args="turtle_pi_joint_state_controller 
           turtle_pi_diff_drive_controller"/>
 
   <node name="twist_relay" pkg="topic_tools" type="relay" args="/cmd_vel /turtle_pi_diff_drive_controller/cmd_vel" />
 
-  <!--node name="rqt_robot_steering" pkg="rqt_robot_steering" type="rqt_robot_steering">
+  <node name="rqt_robot_steering" pkg="rqt_robot_steering" type="rqt_robot_steering">
     <param name="default_topic" value="/turtle_pi_diff_drive_controller/cmd_vel"/>
-  </node-->
+  </node>
 </launch>

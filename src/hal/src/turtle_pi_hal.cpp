@@ -2,6 +2,18 @@
 
 TurtlePiHal::TurtlePiHal()
 { 
+    cmd[0] = 4.0;
+    cmd[1] = 4.0;
+
+    pos[0] = 3.0;
+    pos[1] = 3.0;
+
+    vel[0] = 2.0;
+    vel[1] = 2.0;
+
+    eff[0] = 1.0;
+    eff[1] = 1.0;
+
     // connect and register the joint state interface
     hardware_interface::JointStateHandle state_handle_left("left_wheel_joint", &pos[0], &vel[0], &eff[0]);
     jnt_state_interface.registerHandle(state_handle_left);
@@ -21,6 +33,9 @@ TurtlePiHal::TurtlePiHal()
     registerInterface(&jnt_pos_interface);
 }
 
+TurtlePiHal::~TurtlePiHal()
+{
+}
 
 void TurtlePiHal::read() {
     printf("HAL: Reading - leftcmd: %0.2f; rightcmd: %0.2f\n", cmd[0], cmd[1]);

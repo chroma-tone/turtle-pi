@@ -6,6 +6,7 @@ class TurtlePiHal : public hardware_interface::RobotHW
 {
 public:
   TurtlePiHal();
+  ~TurtlePiHal();
   virtual void read();
   virtual void write();
 
