@@ -100,4 +100,5 @@
     <parent link="base_link"/>
     <child link="scanner"/>
     <origin xyz="0.105 0 0.22" rpy="0 0 0"/>
+  </joint>
 </robot>

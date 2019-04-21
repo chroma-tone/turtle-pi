@@ -1,18 +1,18 @@
 !!python/object/new:dynamic_reconfigure.encoding.Config
 dictitems:
-  ISO: 400
+  ISO: 1600
   awb_mode: auto
-  brightness: 50
+  brightness: 75
   contrast: 0
-  exposureCompensation: 0
+  exposureCompensation: 2
   exposure_mode: auto
   groups: !!python/object/new:dynamic_reconfigure.encoding.Config
     dictitems:
       ISO: 400
       awb_mode: auto
-      brightness: 50
+      brightness: 75
       contrast: 0
-      exposureCompensation: 0
+      exposureCompensation: 2
       exposure_mode: auto
       groups: !!python/object/new:dynamic_reconfigure.encoding.Config
         state: []
@@ -28,7 +28,7 @@ dictitems:
       state: true
       type: ''
       vFlip: true
-      videoStabilisation: true
+      videoStabilisation: false
       zoom: 1.0
     state: []
   hFlip: true
@@ -36,6 +36,6 @@ dictitems:
   sharpness: 0
   shutterSpeed: 10000
   vFlip: true
-  videoStabilisation: true
+  videoStabilisation: false
   zoom: 1.0
 state: []
