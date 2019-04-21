@@ -5,7 +5,7 @@
 
     <include file="$(find raspicam_node)/launch/camerav2_410x308_30fps.launch" />
     <node name="camera_configure" pkg="dynamic_reconfigure" type="dynparam" args="load /raspicam_node $(find turtle_pi)/config/raspicam_config.yaml" />
-    <node name="camera_relay" pkg="topic_tools" type="relay" args="/raspicam_node/image/compressed /compressed_image" />
+    <node name="camera_relay" pkg="topic_tools" type="relay" args="/raspicam_node/image/compressed /image_raw/compressed" />
 
     <node name="turtle_pi_sr_motor" pkg="turtle_pi_sr_motor" type="sr-motor-control.py" />
     <node name="twist_relay" pkg="topic_tools" type="relay" args="/cmd_vel /twist" />
