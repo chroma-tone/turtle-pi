@@ -3,6 +3,7 @@
 import RPi.GPIO as GPIO
 from time import sleep
 from time import time
+import threading
 
 import rospy
 from std_msgs.msg import Int16
@@ -11,7 +12,9 @@ from std_msgs.msg import Float32
 class ShiftRegisterMotorControl:
     # Static state of latch across all ShiftRegisterMotorControl instances
     latchState = 0
+    latchSemaphore = threading.Semaphore()
     gpiosInitialized = False
+
 
     # Ref https://cdn-learn.adafruit.com/assets/assets/000/009/769/original/mshieldv1-schem.png
     # TODO: Motor 3 and 4 don't seem to be working - need to investigate why later
@@ -104,6 +107,7 @@ class ShiftRegisterMotorControl:
 
     @staticmethod
     def latch_tx():
+        ShiftRegisterMotorControl.latchSemaphore.acquire()
         latch_start = time()
         GPIO.output(ShiftRegisterMotorControl.MOTORLATCH, GPIO.LOW)
 
@@ -131,6 +135,7 @@ class ShiftRegisterMotorControl:
         latch_end = time()
         latch_delta = latch_end - latch_start
         rospy.loginfo ("Latch delta {0:2}".format(latch_delta))
+        ShiftRegisterMotorControl.latchSemaphore.release()
 
     def setDirection(this, direction):
         # Check if we're already going this way - no need to re-latch
@@ -228,10 +233,10 @@ def listener():
     rospy.spin()
 
 if __name__ == '__main__':
-    motorL = ShiftRegisterMotorControl(1)
+    motorL = ShiftRegisterMotorControl(2)
     motorL.setSpeed(80.0)
 
-    motorR = ShiftRegisterMotorControl(2)
+    motorR = ShiftRegisterMotorControl(1)
     motorR.setSpeed(80.0)
 
     listener()
