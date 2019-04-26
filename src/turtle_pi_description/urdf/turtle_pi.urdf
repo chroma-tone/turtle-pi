@@ -1,5 +1,14 @@
 <?xml version="1.0"?>
 <robot name="turtle_pi" xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <link name="base_footprint"/>
+
+  <joint name="base_joint" type="fixed">
+    <parent link="base_footprint"/>
+    <child link="base_link" />
+    <origin xyz="0 0 0.010" rpy="0 0 0"/>
+  </joint>
+
   <link name="base_link">
     <visual>
       <geometry>
@@ -82,6 +91,7 @@
   <transmission name="left_wheel_trans">
     <type>transmission_interface/SimpleTransmission</type>
     <actuator name="left_wheel_motor">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
     <joint name="left_wheel_joint">
@@ -99,6 +109,7 @@
   <transmission name="right_wheel_trans">
     <type>transmission_interface/SimpleTransmission</type>
     <actuator name="right_wheel_motor">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
     <joint name="right_wheel_joint">
@@ -118,7 +129,7 @@
     <sensor type="camera" name="camera_camera_sensor">
       <update_rate>30.0</update_rate>
       <camera>
-        <pose>0.035 0 0.078 0 0 0</pose>
+        <pose>0.035 0.1 0.078 0 0 0</pose>
         <horizontal_fov>${85 * M_PI/180.0}</horizontal_fov>
         <image>
           <format>R8G8B8</format>
@@ -133,7 +144,7 @@
 
       <plugin name="camera_camera_controller" filename="libgazebo_ros_camera.so">
         <alwaysOn>true</alwaysOn>
-        <updateRate>0.0</updateRate>
+        <updateRate>10.0</updateRate>
         <cameraName>turtle_pi/camera</cameraName>
         <imageTopicName>image_raw</imageTopicName>
         <cameraInfoTopicName>camera_info</cameraInfoTopicName>
@@ -165,6 +176,30 @@
   <gazebo>
     <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
       <robotNamespace>/</robotNamespace>
+      <robotSimType>gazebo_ros_control/DefaultHWSim</robotSimType>
+    </plugin>
+  </gazebo>
+
+  <gazebo>
+    <plugin name="turtle_pi_diff_drive" filename="libgazebo_ros_diff_drive.so">
+      <commandTopic>cmd_vel</commandTopic>
+      <odometryTopic>odom</odometryTopic>
+      <odometryFrame>odom</odometryFrame>
+      <odometrySource>world</odometrySource>
+      <publishOdomTF>true</publishOdomTF>
+      <robotBaseFrame>base_footprint</robotBaseFrame>
+      <publishWheelTF>false</publishWheelTF>
+      <publishTf>true</publishTf>
+      <publishWheelJointState>true</publishWheelJointState>
+      <legacyMode>false</legacyMode>
+      <updateRate>30</updateRate>
+      <leftJoint>left_wheel_joint</leftJoint>
+      <rightJoint>right_wheel_joint</rightJoint>
+      <wheelSeparation>0.287</wheelSeparation>
+      <wheelDiameter>0.066</wheelDiameter>
+      <wheelAcceleration>1</wheelAcceleration>
+      <wheelTorque>10</wheelTorque>
+      <rosDebugLevel>na</rosDebugLevel>
     </plugin>
   </gazebo>
 </robot>
