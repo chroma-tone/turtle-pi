@@ -125,72 +125,54 @@
     <child link="camera_link"/>
   </joint>
 
+  <joint name="camera_depth_joint" type="fixed">
+    <origin xyz="0 0 0" rpy="${-M_PI/2} 0 ${-M_PI/2} "/>
+    <parent link="camera_link"/>
+    <child link="camera_depth_link"/>
+  </joint>
+  <link name="camera_depth_link"/>
+
   <gazebo reference="camera_link">
-    <sensor type="camera" name="camera_camera_sensor">
+    <sensor type="depth" name="camera_camera_sensor">
+      <visualize>true</visualize>
       <update_rate>30.0</update_rate>
       <camera>
-        <pose>0.035 0.0 0.078 0 0 0</pose>
+        <pose>0.035 0.0 0.078 0 ${M_PI/2.0} 0</pose>
         <horizontal_fov>${85 * M_PI/180.0}</horizontal_fov>
         <image>
           <format>R8G8B8</format>
           <width>640</width>
           <height>480</height>
         </image>
+        <depth_camera>
+        </depth_camera>
         <clip>
           <near>0.01</near>
           <far>100</far>
         </clip>
       </camera>
 
-      <plugin name="camera_camera_controller" filename="libgazebo_ros_camera.so">
+      <plugin name="camera_camera_controller" filename="libgazebo_ros_openni_kinect.so">
         <alwaysOn>true</alwaysOn>
         <updateRate>10.0</updateRate>
+        <frameName>camera_depth_link</frameName>
         <cameraName>turtle_pi/camera</cameraName>
         <imageTopicName>image_raw</imageTopicName>
         <cameraInfoTopicName>camera_info</cameraInfoTopicName>
-        <frameName>camera_link</frameName>
+        <depthImageTopicName>depth/image_raw</depthImageTopicName>
+        <pointCloudTopicName>depth/points</pointCloudTopicName>
+        <depthImageCameraInfoTopicName>depth/camera_info</depthImageCameraInfoTopicName>            
+        <pointCloudCutoff>0.4</pointCloudCutoff>                
+        <CxPrime>0.0</CxPrime>
+        <Cx>0.0</Cx>
+        <Cy>0.0</Cy>
+        <focalLength>0.0</focalLength>
         <hackBaseline>0.07</hackBaseline>
         <distortionK1>0.0</distortionK1>
         <distortionK2>0.0</distortionK2>
         <distortionK3>0.0</distortionK3>
         <distortionT1>0.0</distortionT1>
         <distortionT2>0.0</distortionT2>
-      </plugin>
-    </sensor>
-  </gazebo>
-
- <gazebo reference="camera_link">
-    <sensor type="ray" name="head_hokuyo_sensor">
-      <pose>0.035 0 0.078 0 0 0</pose>
-      <visualize>true</visualize>
-      <update_rate>30</update_rate>
-      <ray>
-        <scan>
-          <horizontal>
-            <samples>720</samples>
-            <resolution>1</resolution>
-            <min_angle>-1.570796</min_angle>
-            <max_angle>1.570796</max_angle>
-          </horizontal>
-        </scan>
-        <range>
-          <min>0.10</min>
-          <max>30.0</max>
-          <resolution>0.01</resolution>
-        </range>
-        <noise>
-          <type>gaussian</type>
-          <!-- Noise parameters based on published spec for Hokuyo laser
-               achieving "+-30mm" accuracy at range < 10m.  A mean of 0.0m and
-               stddev of 0.01m will put 99.7% of samples within 0.03m of the true
-               reading. -->
-          <mean>0.0</mean>
-          <stddev>0.01</stddev>
-        </noise>
-      </ray>
-      <plugin name="gazebo_ros_head_hokuyo_controller" filename="libgazebo_ros_laser.so">
-        <topicName>/turtle_pi/laser/scan</topicName>
-        <frameName>camera_link</frameName>
       </plugin>
     </sensor>
   </gazebo>
